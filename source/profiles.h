@@ -17,17 +17,22 @@ bool miamiNights(led_t *currentKeyLedColors, uint8_t intensity);
 /*
  * ANIMATED
  */
-bool animatedRainbowVertical(led_t *currentKeyLedColors, uint8_t intensity);
-bool animatedRainbowFlow(led_t *currentKeyLedColors, uint8_t intensity);
-bool animatedRainbowWaterfall(led_t *currentKeyLedColors, uint8_t intensity);
-bool animatedBreathing(led_t *currentKeyLedColors, uint8_t intensity);
-bool animatedSpectrum(led_t *currentKeyLedColors, uint8_t intensity);
-bool animatedWave(led_t *currentKeyLedColors, uint8_t intensity);
+void animatedRainbowVertical(led_t *currentKeyLedColors, uint8_t intensity);
+void animatedRainbowFlow(led_t *currentKeyLedColors, uint8_t intensity);
+void animatedRainbowWaterfall(led_t *currentKeyLedColors, uint8_t intensity);
+void animatedBreathing(led_t *currentKeyLedColors, uint8_t intensity);
+void animatedSpectrum(led_t *currentKeyLedColors, uint8_t intensity);
+void animatedWave(led_t *currentKeyLedColors, uint8_t intensity);
 
 /*
  * ANIMATED - responding to key presses
  */
-bool reactiveFade(led_t *ledColors, uint8_t intensity);
+void reactiveFade(led_t *ledColors, uint8_t intensity);
 void reactiveFadeKeypress(led_t *ledColors, uint8_t row, uint8_t col,
                           uint8_t intensity);
 void reactiveFadeInit(led_t *ledColors);
+
+void reactivePulse(led_t *ledColors, uint8_t intensity);
+void reactivePulseKeypress(led_t *ledColors, uint8_t row, uint8_t col,
+                           uint8_t intensity);
+void reactivePulseInit(led_t *ledColors);
