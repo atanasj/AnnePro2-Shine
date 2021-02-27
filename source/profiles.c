@@ -10,8 +10,28 @@ static const uint32_t colorPalette[] = {0xcc0000, 0xccc900, 0x5fcc00, 0x00c7cc,
 
 #define LEN(a) (sizeof(a) / sizeof(*a))
 
+bool white(led_t *currentKeyLedColors, uint8_t intensity) {
+  setAllKeysColor(currentKeyLedColors, 0x80ff99, intensity);
+  return true;
+}
+
+bool orange(led_t *currentKeyLedColors, uint8_t intensity) {
+  setAllKeysColor(currentKeyLedColors, 0xFF8000, intensity);
+  return true;
+}
+
 bool red(led_t *currentKeyLedColors, uint8_t intensity) {
   setAllKeysColor(currentKeyLedColors, 0xFF0000, intensity);
+  return true;
+}
+
+bool purple(led_t *currentKeyLedColors, uint8_t intensity) {
+  setAllKeysColor(currentKeyLedColors, 0x7F0FF, intensity);
+  return true;
+}
+
+bool yellow(led_t *currentKeyLedColors, uint8_t intensity) {
+  setAllKeysColor(currentKeyLedColors, 0xFFFF00, intensity);
   return true;
 }
 
