@@ -3,16 +3,16 @@
 /*
  * STATIC
  */
-bool white(led_t *currentKeyLedColors, uint8_t intensity);
-bool orange(led_t *currentKeyLedColors, uint8_t intensity);
-bool red(led_t *currentKeyLedColors, uint8_t intensity);
-bool purple(led_t *currentKeyLedColors, uint8_t intensity);
-bool yellow(led_t *currentKeyLedColors, uint8_t intensity);
-bool green(led_t *currentKeyLedColors, uint8_t intensity);
-bool blue(led_t *currentKeyLedColors, uint8_t intensity);
-bool rainbowHorizontal(led_t *currentKeyLedColors, uint8_t intensity);
-bool rainbowVertical(led_t *currentKeyLedColors, uint8_t intensity);
-bool miamiNights(led_t *currentKeyLedColors, uint8_t intensity);
+void white(led_t *currentKeyLedColors, uint8_t intensity);
+void orange(led_t *currentKeyLedColors, uint8_t intensity);
+void red(led_t *currentKeyLedColors, uint8_t intensity);
+void purple(led_t *currentKeyLedColors, uint8_t intensity);
+void yellow(led_t *currentKeyLedColors, uint8_t intensity);
+void green(led_t *currentKeyLedColors, uint8_t intensity);
+void blue(led_t *currentKeyLedColors, uint8_t intensity);
+void rainbowHorizontal(led_t *currentKeyLedColors, uint8_t intensity);
+void rainbowVertical(led_t *currentKeyLedColors, uint8_t intensity);
+void miamiNights(led_t *currentKeyLedColors, uint8_t intensity);
 
 /*
  * ANIMATED
