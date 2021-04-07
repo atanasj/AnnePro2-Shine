@@ -2,7 +2,6 @@
 # Build global options
 # NOTE: Can be overridden externally.
 #
-
 # Compiler options here.
 ifeq ($(USE_OPT),)
   USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -Wno-cpp -DHAL_USE_COMMUNITY
