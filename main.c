@@ -49,12 +49,26 @@ ioline_t ledColumns[NUM_COLUMN] = {
     LINE_LED_COL_13, LINE_LED_COL_14};
 
 ioline_t ledRows[NUM_ROW * 3] = {
+<<<<<<< HEAD
     LINE_LED_ROW_1_R, LINE_LED_ROW_1_G, LINE_LED_ROW_1_B, LINE_LED_ROW_2_R,
     LINE_LED_ROW_2_G, LINE_LED_ROW_2_B, LINE_LED_ROW_3_R, LINE_LED_ROW_3_G,
     LINE_LED_ROW_3_B, LINE_LED_ROW_4_R, LINE_LED_ROW_4_G, LINE_LED_ROW_4_B,
     LINE_LED_ROW_5_R, LINE_LED_ROW_5_G, LINE_LED_ROW_5_B,
 };
 
+=======
+    LINE_LED_ROW_1_R, LINE_LED_ROW_1_G, LINE_LED_ROW_1_B,
+
+    LINE_LED_ROW_2_R, LINE_LED_ROW_2_G, LINE_LED_ROW_2_B,
+
+    LINE_LED_ROW_3_R, LINE_LED_ROW_3_G, LINE_LED_ROW_3_B,
+
+    LINE_LED_ROW_4_R, LINE_LED_ROW_4_G, LINE_LED_ROW_4_B,
+
+    LINE_LED_ROW_5_R, LINE_LED_ROW_5_G, LINE_LED_ROW_5_B,
+};
+
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 #define KEY_COUNT 70
 
 #define LEN(a) (sizeof(a) / sizeof(*a))
@@ -77,12 +91,14 @@ typedef struct {
   lighting_callback callback;
   // For static effects, their `callback` is called only once.
   // For dynamic effects, their `callback` is called in a loop.
-  // This field controls the animation speed by specifying
-  // how many ticks to skip before calling the callback again.
-  // For example, 8000 in the array means that `callback` is called on every
-  // 8000th tick. Different 4 values can be specified to allow different
-  // speeds of the same effect. For static effects, the array must contain {0,
-  // 0, 0, 0}.
+  //
+  // This field controls the animation speed by specifying how many LED refresh
+  // cycles to skip before calling the callback again. For example, 1 in the
+  // array means that `callback` is called on every cycle, ie. ~71Hz on default
+  // settings.
+  //
+  // Different 4 values can be specified to allow different speeds of the same
+  // effect. For static effects, the array must contain {0, 0, 0, 0}.
   uint16_t animationSpeed[4];
   // In case the profile is reactive, it responds to each keypress.
   // This callback is called with the locations of the pressed keys.
@@ -94,11 +110,15 @@ typedef struct {
 
 profile profiles[] = {
 <<<<<<< HEAD
+<<<<<<< HEAD
     {white, {0, 0, 0, 0}, NULL, NULL},
     {orange, {0, 0, 0, 0}, NULL, NULL},
 =======
     {colorBleed, {0, 0, 0, 0}, NULL, NULL},
 >>>>>>> 2d814f4b8f0a7fcf471788ad127aba3439852eb3
+=======
+    /* {colorBleed, {0, 0, 0, 0}, NULL, NULL}, */
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
     {red, {0, 0, 0, 0}, NULL, NULL},
     {purple, {0, 0, 0, 0}, NULL, NULL},
     {yellow, {0, 0, 0, 0}, NULL, NULL},
@@ -107,27 +127,28 @@ profile profiles[] = {
     {white, {0, 0, 0, 0}, NULL, NULL},
     {rainbowHorizontal, {0, 0, 0, 0}, NULL, NULL},
     {rainbowVertical, {0, 0, 0, 0}, NULL, NULL},
-    {animatedRainbowVertical, {3000, 2000, 1200, 600}, NULL, NULL},
-    {animatedRainbowFlow, {1000, 400, 200, 140}, NULL, NULL},
-    {animatedRainbowWaterfall, {1600, 1200, 800, 400}, NULL, NULL},
-    {animatedBreathing, {1600, 1200, 800, 400}, NULL, NULL},
-    {animatedWave, {1200, 800, 400, 200}, NULL, NULL},
-    {animatedSpectrum, {1600, 1200, 800, 400}, NULL, NULL},
-    {reactiveFade,
-     {400, 1600, 1200, 800},
-     reactiveFadeKeypress,
-     reactiveFadeInit},
-    {reactivePulse,
-     {400, 1600, 1200, 800},
-     reactivePulseKeypress,
-     reactivePulseInit}};
+    {animatedRainbowVertical, {35, 28, 21, 14}, NULL, NULL},
+    {animatedRainbowFlow, {7, 5, 2, 1}, NULL, NULL},
+    {animatedRainbowWaterfall, {7, 5, 2, 1}, NULL, NULL},
+    {animatedBreathing, {5, 3, 2, 1}, NULL, NULL},
+    {animatedWave, {5, 3, 2, 1}, NULL, NULL},
+    {animatedSpectrum, {11, 6, 4, 1}, NULL, NULL},
+    {reactiveFade, {4, 3, 2, 1}, reactiveFadeKeypress, reactiveFadeInit},
+    {reactivePulse, {4, 3, 2, 1}, reactivePulseKeypress, reactivePulseInit}};
 
 static uint8_t currentProfile = 0;
 static const uint8_t amountOfProfiles = sizeof(profiles) / sizeof(profile);
 static volatile uint8_t currentSpeed = 0;
-static volatile uint16_t animationSkipTicks = 0;
-static uint32_t animationLastCallTime = 0;
 
+/* If non-zero the animation is enabled; 1 is full speed */
+static volatile uint16_t animationSkipTicks = 0;
+
+<<<<<<< HEAD
+=======
+/* Animation tick counter used to slow down animations */
+static uint16_t animationTicks = 0;
+
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 /*
    Original firmware reference:
    ~9.81ms column cycle measured -> 100Hz.
@@ -139,14 +160,22 @@ static uint32_t animationLastCallTime = 0;
    The row strobing is done at around 70kHz.
 
    We would like to achieve more colors than the original firmware.
+<<<<<<< HEAD
+=======
+
+   80kHz with pwmCounterLimit=80 will scan 14 columns at 71.4Hz - enough for
+   smooth animations, and allows for 6bit LED brightness control.
+
+   Tests on oscilloscope suggest it can reach 100kHz.
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
  */
 static const GPTConfig bftm0Config = {.frequency = 80000,
                                       .callback = mainCallback};
 
 static mutex_t mtx;
 
-// each color from RGB is rightshifted by this amount
-// default zero corresponds to full intensity, max 3 correponds to 1/8 of color
+// Default zero corresponds to full intensity. Each color has the intensity
+// decreased linearly with this setting by the PWM loop.
 static uint8_t ledIntensity = 0;
 
 static volatile bool ledEnabled = false;
@@ -166,7 +195,7 @@ static uint8_t commandBuffer[64];
 
 void updateAnimationSpeed(void) {
   animationSkipTicks = profiles[currentProfile].animationSpeed[currentSpeed];
-  animationLastCallTime = 0;
+  animationTicks = 0;
 }
 
 /*
@@ -273,10 +302,13 @@ void changeMask(uint8_t mask) {
 
 void nextIntensity() {
   ledIntensity = (ledIntensity + 1) % 8;
+<<<<<<< HEAD
 
   // pwmEnableChannel(&PWMD_MCTM0, 0, PWM_PERCENTAGE_TO_WIDTH(&PWMD_MCTM0,
   // prcnt)); pwmChangePeriod(&PWMD_MCTM0, PWM_PERCENTAGE_TO_WIDTH(&PWMD_MCTM0,
   // prcnt));
+=======
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
   executeProfile(false);
 }
 
@@ -430,7 +462,11 @@ void ledSet() {
 
   if (bytesRead >= 4) {
     if (commandBuffer[0] < NUM_ROW && commandBuffer[1] < NUM_COLUMN) {
+<<<<<<< HEAD
       setKeyColor(&ledColors[commandBuffer[0] * NUM_COLUMN + commandBuffer[1]],
+=======
+      setKeyColor(&ledColors[ROWCOL2IDX(commandBuffer[0], commandBuffer[1])],
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
                   ((uint16_t)commandBuffer[3] << 8 | commandBuffer[2]));
     }
   }
@@ -446,7 +482,11 @@ void ledSetRow() {
   if (bytesRead >= sizeof(led_t) * NUM_COLUMN + 1) {
     if (commandBuffer[0] < NUM_ROW) {
       /* FIXME: Don't use direct access */
+<<<<<<< HEAD
       memcpy(&ledColors[commandBuffer[0] * NUM_COLUMN], &commandBuffer[1],
+=======
+      memcpy(&ledColors[ROWCOL2IDX(commandBuffer[0], 0)], &commandBuffer[1],
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
              sizeof(led_t) * NUM_COLUMN);
     }
   }
@@ -471,6 +511,10 @@ static inline void animationCallback() {
  * Row1 R-G-B, Row2 R-G-B, Row3 R-G-B, ...
  */
 uint8_t rowTimes[NUM_ROW * 3];
+<<<<<<< HEAD
+=======
+uint8_t rowsEnabled;
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 
 /*
  * pwmCounter which counts time of lit rows within each column cycle.
@@ -484,7 +528,11 @@ uint16_t pwmCounter;
  * You can get brighter LEDs if you set this to 64. And possibly burn the
  * board in the longer period of time.
  */
+<<<<<<< HEAD
 const uint16_t pwmCounterLimit = 90;
+=======
+const uint16_t pwmCounterLimit = 80;
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 
 /* Disable timeouted LEDs */
 static inline void pwmRowDimmer() {
@@ -492,7 +540,16 @@ static inline void pwmRowDimmer() {
     const uint8_t time = rowTimes[ledRow];
     if (pwmCounter == time) {
       palClearLine(ledRows[ledRow]);
+<<<<<<< HEAD
     }
+=======
+      rowsEnabled--;
+    }
+  }
+  if (rowsEnabled == 0) {
+    /* Limit color bleed by disabling the column as early as possible */
+    palClearLine(ledColumns[currentColumn]);
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
   }
 }
 
@@ -503,17 +560,32 @@ static inline void pwmNextColumn() {
 
   currentColumn = (currentColumn + 1) % NUM_COLUMN;
 
+<<<<<<< HEAD
   /* TODO: Minimum intensity per animation */
   const uint8_t intensityDecrease = ledIntensity * 8;
 
   /* Prepare the PWM data while still lighting the previous column */
   for (size_t keyRow = 0; keyRow < NUM_ROW; keyRow++) {
     const uint8_t ledIndex = currentColumn + NUM_COLUMN * keyRow;
+=======
+  /* TODO: Minimum intensity per animation? For some, the darkness doesn't work
+     well (rainbow) */
+  const uint8_t intensityDecrease = ledIntensity * 8;
+
+  /* Prepare the PWM data and enable leds for non-zero colors */
+  rowsEnabled = 0;
+  for (size_t keyRow = 0; keyRow < NUM_ROW; keyRow++) {
+    const uint8_t ledIndex = ROWCOL2IDX(keyRow, currentColumn);
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
     const led_t cl = ledColors[ledIndex];
 
     for (size_t colorIdx = 0; colorIdx < 3; colorIdx++) {
       const uint8_t ledRow = 3 * keyRow + colorIdx;
+<<<<<<< HEAD
       /* <<2 to decrease the color resolution from 0-255 to 0-63 */
+=======
+      /* >>2 to decrease the color resolution from 0-255 to 0-63 */
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
       uint8_t color = cl.pv[2 - colorIdx] >> 2;
       if (intensityDecrease >= color) {
         color = 0;
@@ -521,13 +593,25 @@ static inline void pwmNextColumn() {
         color -= intensityDecrease;
         /* Each led is enabled for color>0 even for a short while. */
         palSetLine(ledRows[ledRow]);
+<<<<<<< HEAD
+=======
+        rowsEnabled++;
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
       }
       rowTimes[ledRow] = color;
     }
   }
 
+<<<<<<< HEAD
   /* Enable the current LED column */
   palSetLine(ledColumns[currentColumn]);
+=======
+  /* Enable the current LED column if at least one row needs this. Limit bleed
+     and maybe power consumption on reactive profiles. */
+  if (rowsEnabled) {
+    palSetLine(ledColumns[currentColumn]);
+  }
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 }
 
 // mainCallback is responsible for 2 things:
@@ -536,6 +620,7 @@ static inline void pwmNextColumn() {
 void mainCallback(GPTDriver *_driver) {
   (void)_driver;
 
+<<<<<<< HEAD
   if (!ledEnabled)
     return;
 
@@ -566,6 +651,37 @@ void mainCallback(GPTDriver *_driver) {
   }
 
   /* We start a new PWM column cycle with leds enabled per-row. */
+=======
+  if (!ledEnabled) {
+    return;
+  }
+
+  pwmCounter += 1;
+  if (pwmCounter < pwmCounterLimit) {
+    pwmRowDimmer();
+    return;
+  }
+
+  /* Update profile if required before starting new cycle */
+  if (needToCallbackProfile) {
+    needToCallbackProfile = false;
+    profiles[currentProfile].callback(ledColors);
+  }
+
+  /* Animation can be updated after each full column cycle. On
+   * pwmCounterLimit=80 + 80kHz timer this refreshes at 80kHz/80/14 = 71Hz and
+   * should be a sensible maximum speed for a fluent smooth animation.
+   */
+  if (animationSkipTicks > 0 && currentColumn == 13) {
+    animationTicks++;
+    if (animationTicks >= animationSkipTicks) {
+      animationTicks = 0;
+      animationCallback();
+    }
+  }
+
+  /* We start a new PWM column cycle. */
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
   pwmCounter = 0;
 
   pwmNextColumn();

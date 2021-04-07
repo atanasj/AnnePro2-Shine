@@ -4,6 +4,7 @@
  * STATIC
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 void white(led_t *currentKeyLedColors, uint8_t intensity);
 void orange(led_t *currentKeyLedColors, uint8_t intensity);
 void red(led_t *currentKeyLedColors, uint8_t intensity);
@@ -15,6 +16,8 @@ void rainbowHorizontal(led_t *currentKeyLedColors, uint8_t intensity);
 void rainbowVertical(led_t *currentKeyLedColors, uint8_t intensity);
 void miamiNights(led_t *currentKeyLedColors, uint8_t intensity);
 =======
+=======
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 void colorBleed(led_t *currentKeyLedColors);
 void red(led_t *currentKeyLedColors);
 void green(led_t *currentKeyLedColors);
@@ -23,7 +26,10 @@ void white(led_t *currentKeyLedColors);
 void rainbowHorizontal(led_t *currentKeyLedColors);
 void rainbowVertical(led_t *currentKeyLedColors);
 void miamiNights(led_t *currentKeyLedColors);
+<<<<<<< HEAD
 >>>>>>> 2d814f4b8f0a7fcf471788ad127aba3439852eb3
+=======
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 
 /*
  * ANIMATED

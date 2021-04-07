@@ -11,6 +11,7 @@ static const uint32_t colorPalette[] = {0xcc0000, 0xcccc00, 0x5fcc00, 0x00c7cc,
 #define LEN(a) (sizeof(a) / sizeof(*a))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void white(led_t *currentKeyLedColors, uint8_t intensity) {
   setAllKeysColor(currentKeyLedColors, 0x80ff99, intensity);
   /* return true; */
@@ -93,6 +94,60 @@ void white(led_t *currentKeyLedColors) {
   setAllKeysColor(currentKeyLedColors, 0xffffff);
 }
 
+=======
+void red(led_t *currentKeyLedColors) {
+  setAllKeysColor(currentKeyLedColors, 0xFF0000);
+}
+
+void green(led_t *currentKeyLedColors) {
+  setAllKeysColor(currentKeyLedColors, 0x00FF00);
+}
+
+void blue(led_t *currentKeyLedColors) {
+  setAllKeysColor(currentKeyLedColors, 0x0000FF);
+}
+
+/* Color bleed test pattern */
+void colorBleed(led_t *currentKeyLedColors) {
+  for (uint16_t c = 0; c < NUM_COLUMN; ++c) {
+    for (uint16_t r = 0; r < NUM_ROW; ++r) {
+      const uint16_t i = c + NUM_COLUMN * r;
+      if (c == 0) {
+        if (r <= 3)
+          currentKeyLedColors[i].rgb = 0x0000FF;
+        else
+          currentKeyLedColors[i].rgb = 0xFF0000;
+        continue;
+      }
+      if (r == 0) {
+        if (c <= 10)
+          currentKeyLedColors[i].rgb = 0x0000FF;
+        else
+          currentKeyLedColors[i].rgb = 0xFF0000;
+        continue;
+      }
+
+      switch (i % 3) {
+      case 0:
+        currentKeyLedColors[i].rgb = 0x0000FF;
+        break;
+      case 1:
+        currentKeyLedColors[i].rgb = 0x00FF00;
+        break;
+      case 2:
+        currentKeyLedColors[i].rgb = 0xFF0000;
+        break;
+      }
+    }
+  }
+}
+
+void white(led_t *currentKeyLedColors) {
+  /* To get "white" you need to compensate for red/blue switches on board */
+  setAllKeysColor(currentKeyLedColors, 0x80ff99);
+}
+
+>>>>>>> b1d1305637407dcf3f3ef7bfc41f7f224ffc14b8
 void miamiNights(led_t *currentKeyLedColors) {
   setAllKeysColor(currentKeyLedColors, 0x00979c);
   setModKeysColor(currentKeyLedColors, 0x9c008f);
@@ -155,9 +210,9 @@ static int breathingDirection = -1;
 void animatedBreathing(led_t *currentKeyLedColors) {
   setAllKeysColorHSV(currentKeyLedColors, 85, 255, breathingValue);
   if (breathingValue >= 180) {
-    breathingDirection = -3;
+    breathingDirection = -2;
   } else if (breathingValue <= 2) {
-    breathingDirection = 3;
+    breathingDirection = 2;
   }
   breathingValue += breathingDirection;
 }
